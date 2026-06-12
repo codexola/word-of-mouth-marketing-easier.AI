@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Check, RefreshCw, X, ImageIcon } from "lucide-react";
 import { PostCandidate } from "@/lib/api";
+import { getPrimaryPostImageUrl } from "@/lib/post-images";
 import { useApp } from "@/providers/app-provider";
 
 interface PostReviewModalProps {
@@ -25,6 +26,7 @@ export function PostReviewModal({
   const { t } = useApp();
   const title = post.generation?.title || "";
   const body = post.generation?.body || "";
+  const thumbUrl = getPrimaryPostImageUrl(post);
 
   return (
     <div className="dash-modal-backdrop">
@@ -42,9 +44,9 @@ export function PostReviewModal({
         </div>
 
         <div className="dash-modal__body">
-          {post.images[0]?.url ? (
+          {thumbUrl ? (
             <div className="position-relative mb-3 rounded overflow-hidden border" style={{ height: "10rem", borderColor: "var(--bs-border-color) !important", borderWidth: "2px" }}>
-              <Image src={post.images[0].url} alt="" fill className="object-cover" unoptimized />
+              <Image src={thumbUrl} alt="" fill className="object-cover" unoptimized />
             </div>
           ) : (
             <div className="d-flex align-items-center justify-content-center mb-3 rounded border" style={{ height: "6rem", background: "#eff6ff", borderColor: "var(--bs-border-color)", borderWidth: "2px" }}>

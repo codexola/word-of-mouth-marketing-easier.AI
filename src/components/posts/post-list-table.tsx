@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 import { StatusBadge } from "@/components/posts/status-badge";
 import { PostCandidate } from "@/lib/api";
+import { getPrimaryPostImageUrl } from "@/lib/post-images";
 import { formatDate, truncate } from "@/lib/utils";
 import { useApp } from "@/providers/app-provider";
 
@@ -30,13 +31,15 @@ export function PostListTable({ posts, showBody = true }: PostListTableProps) {
           </tr>
         </thead>
         <tbody>
-          {posts.map((post) => (
+          {posts.map((post) => {
+            const thumbUrl = getPrimaryPostImageUrl(post);
+            return (
             <tr key={post.id}>
               <td>
                 <Link href={`/posts/${post.id}`}>
-                  {post.images[0]?.url ? (
+                  {thumbUrl ? (
                     <div className="dash-thumb position-relative">
-                      <Image src={post.images[0].url} alt="" fill className="object-cover" unoptimized />
+                      <Image src={thumbUrl} alt="" fill className="object-cover" unoptimized />
                     </div>
                   ) : (
                     <div className="dash-thumb d-flex align-items-center justify-content-center">
@@ -61,7 +64,8 @@ export function PostListTable({ posts, showBody = true }: PostListTableProps) {
               <td><StatusBadge status={post.status} /></td>
               <td className="text-muted">{formatDate(post.createdAt)}</td>
             </tr>
-          ))}
+          );
+          })}
         </tbody>
       </table>
     </div>

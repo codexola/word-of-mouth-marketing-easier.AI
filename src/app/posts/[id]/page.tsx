@@ -12,6 +12,7 @@ import { FlowPageAssets } from "@/components/dashboard/flow-page-assets";
 import { PAGE_FLOW_STEPS } from "@/lib/flow-images";
 import { StatusBadge } from "@/components/posts/status-badge";
 import { api, ApiError, PostCandidateDetail } from "@/lib/api";
+import { getPostImageUrls } from "@/lib/post-images";
 import { formatDate } from "@/lib/utils";
 import { useApp } from "@/providers/app-provider";
 
@@ -70,6 +71,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   const isLocked = isCancelled;
   const isRejected = post.status === "REJECTED";
   const lockedStatus = t.status.CANCELLED;
+  const displayImages = getPostImageUrls(post);
 
   return (
     <DashboardLayout>
@@ -97,12 +99,12 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
         <div className="row g-3 g-lg-4">
           <div className="col-12 col-lg-6">
             <PageCard title={t.postDetail.photos}>
-              {post.images.length > 0 ? (
+              {displayImages.length > 0 ? (
                 <div className="row g-2">
-                  {post.images.map((img) => (
-                    <div key={img.id} className="col-6">
+                  {displayImages.map((url, index) => (
+                    <div key={`${url}-${index}`} className="col-6">
                       <div className="position-relative rounded overflow-hidden border" style={{ aspectRatio: "1", borderColor: "var(--bs-border-color)", borderWidth: "2px", boxShadow: "0 3px 0 #dbeafe" }}>
-                        <Image src={img.url} alt={img.fileName || ""} fill className="object-cover" unoptimized />
+                        <Image src={url} alt="" fill className="object-cover" unoptimized />
                       </div>
                     </div>
                   ))}

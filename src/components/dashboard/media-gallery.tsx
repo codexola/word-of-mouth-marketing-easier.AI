@@ -9,6 +9,11 @@ import { PageCard } from "@/components/layout/page-shell";
 
 type SourceFilter = "ALL" | "GOOGLE_DRIVE" | "LINE";
 
+function displayFileName(photo: MediaPhoto): string {
+  if (photo.fileName?.trim()) return photo.fileName.trim();
+  return `photo-${photo.id.slice(0, 8)}`;
+}
+
 export function MediaGallery() {
   const { t } = useApp();
   const [items, setItems] = useState<MediaPhoto[]>([]);
@@ -42,7 +47,7 @@ export function MediaGallery() {
   }, [loadPhotos]);
 
   const handleDelete = async (photo: MediaPhoto) => {
-    const msg = t.dashboard.media.deleteConfirm.replace("{name}", photo.fileName || photo.id.slice(0, 8));
+    const msg = t.dashboard.media.deleteConfirm.replace("{name}", displayFileName(photo));
     if (!window.confirm(msg)) return;
 
     setDeletingId(photo.id);
@@ -88,33 +93,37 @@ export function MediaGallery() {
       ) : items.length === 0 ? (
         <p className="dash-empty mb-0">{t.dashboard.media.empty}</p>
       ) : (
-        <div className="row g-3">
-          {items.map((photo) => (
-            <div key={photo.id} className="col-6 col-md-4 col-lg-3 col-xl-2">
-              <div className="media-gallery-card h-100 border rounded overflow-hidden position-relative">
-                <div className="media-gallery-thumb ratio ratio-1x1 bg-light">
+        <div className="media-gallery-grid">
+          {items.map((photo) => {
+            const sourceLabel =
+              SOURCE_LABELS[photo.postSource as keyof typeof SOURCE_LABELS] || photo.postSource;
+            const statusLabel = photo.inArchive
+              ? t.dashboard.media.inArchive
+              : t.dashboard.media.notInArchive;
+
+            return (
+              <article key={photo.id} className="media-gallery-card">
+                <div className="media-gallery-thumb">
                   <Image
                     src={photo.url}
-                    alt={photo.fileName || ""}
+                    alt={displayFileName(photo)}
                     fill
                     unoptimized
-                    className="object-fit-cover"
-                    sizes="(max-width: 768px) 50vw, 200px"
+                    className="media-gallery-img"
+                    sizes="180px"
                   />
                 </div>
-                <div className="p-2 small">
-                  <p className="mb-1 fw-semibold text-truncate" title={photo.fileName || undefined}>
-                    {photo.fileName || "—"}
-                  </p>
-                  <p className="mb-1 text-muted">
-                    {SOURCE_LABELS[photo.postSource as keyof typeof SOURCE_LABELS] || photo.postSource}
-                  </p>
-                  {photo.inArchive && (
-                    <span className="badge text-bg-secondary mb-1">{t.dashboard.media.inArchive}</span>
-                  )}
+                <div className="media-gallery-body">
+                  <div className="media-gallery-meta">
+                    <p className="media-gallery-line media-gallery-line--title" title={displayFileName(photo)}>
+                      {displayFileName(photo)}
+                    </p>
+                    <p className="media-gallery-line media-gallery-line--muted">{sourceLabel}</p>
+                    <p className="media-gallery-line media-gallery-line--muted">{statusLabel}</p>
+                  </div>
                   <button
                     type="button"
-                    className="dash-btn dash-btn--danger dash-btn--sm w-100 mt-1"
+                    className="dash-btn dash-btn--danger dash-btn--sm media-gallery-delete"
                     disabled={deletingId === photo.id}
                     onClick={() => handleDelete(photo)}
                   >
@@ -122,9 +131,9 @@ export function MediaGallery() {
                     <span>{deletingId === photo.id ? t.dashboard.media.deleting : t.dashboard.media.delete}</span>
                   </button>
                 </div>
-              </div>
-            </div>
-          ))}
+              </article>
+            );
+          })}
         </div>
       )}
 

@@ -325,6 +325,9 @@ export const api = {
 
   regenerateReview: (id: string) =>
     request<ReviewRequest>(`/reviews/${id}/regenerate`, { method: "POST" }),
+
+  deleteReview: (id: string) =>
+    request<{ success: boolean }>(`/reviews/${id}`, { method: "DELETE" }),
 };
 
 export interface MediaPhoto {
@@ -354,6 +357,7 @@ export interface PostCandidate {
   memo?: string | null;
   createdAt: string;
   images: { id: string; url: string; fileName?: string | null }[];
+  approvedPost?: Pick<ApprovedPost, "id" | "imageUrls" | "status"> | null;
   generation?: {
     title: string;
     body: string;

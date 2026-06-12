@@ -592,13 +592,70 @@ html.dark .dash-table tbody tr:hover {
   font-size: 0.78rem;
 }
 
+.media-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: 0.75rem;
+}
+
 .media-gallery-card {
+  display: flex;
+  flex-direction: column;
   background: var(--card);
-  border-color: var(--border) !important;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 16.5rem;
 }
 
 .media-gallery-thumb {
   position: relative;
+  flex: 0 0 9rem;
+  width: 100%;
+  height: 9rem;
+  background: var(--muted);
+}
+
+.media-gallery-img {
+  object-fit: cover;
+}
+
+.media-gallery-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0.5rem;
+}
+
+.media-gallery-meta {
+  flex: 1;
+  min-height: 3.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.media-gallery-line {
+  height: 1.25rem;
+  line-height: 1.25rem;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+}
+
+.media-gallery-line--title {
+  font-weight: 700;
+}
+
+.media-gallery-line--muted {
+  color: var(--muted-foreground);
+}
+
+.media-gallery-delete {
+  width: 100%;
+  margin-top: auto;
+  flex-shrink: 0;
 }
 
 .dash-btn:disabled {

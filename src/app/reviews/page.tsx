@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Plus, RefreshCw, Copy, CheckCircle, XCircle, Save } from "lucide-react";
+import { Plus, RefreshCw, Copy, CheckCircle, XCircle, Save, Trash2 } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageHeader, PageCard, PageLoading, PageEmpty, PageFilterBar } from "@/components/layout/page-shell";
 import { FlowStepBanner } from "@/components/dashboard/flow-step-banner";
@@ -106,14 +106,34 @@ function ReviewsContent() {
     }
   };
 
-  const markCancelled = async (id: string) => {
+  const markCancelled = async (review: ReviewRequest) => {
+    const msg = t.reviews.confirmCancel.replace("{name}", review.customerName);
+    if (!window.confirm(msg)) return;
     try {
-      await api.updateReview(id, { sendStatus: "CANCELLED" });
+      await api.updateReview(review.id, { sendStatus: "CANCELLED" });
       loadReviews();
     } catch {
       alert(t.reviews.updateFailed);
     }
   };
+
+  const deleteReview = async (review: ReviewRequest) => {
+    const msg = t.reviews.confirmDelete.replace("{name}", review.customerName);
+    if (!window.confirm(msg)) return;
+    try {
+      await api.deleteReview(review.id);
+      alert(t.reviews.deleted);
+      loadReviews();
+    } catch {
+      alert(t.reviews.deleteFailed);
+    }
+  };
+
+  const canDeleteReview = (review: ReviewRequest) =>
+    review.sendStatus !== "SENT" &&
+    !review.thankSentAt &&
+    !review.reviewSentAt &&
+    !review.followUpSentAt;
 
   const statusOptions = [
     { value: "", label: t.common.all },
@@ -273,9 +293,15 @@ function ReviewsContent() {
                       </button>
                     )}
                     {review.sendStatus !== "CANCELLED" && review.sendStatus !== "SENT" && (
-                      <button type="button" className="dash-btn dash-btn--outline dash-btn--sm" onClick={() => markCancelled(review.id)}>
+                      <button type="button" className="dash-btn dash-btn--outline dash-btn--sm" onClick={() => markCancelled(review)}>
                         <XCircle size={14} />
                         {t.reviews.markCancelled}
+                      </button>
+                    )}
+                    {canDeleteReview(review) && (
+                      <button type="button" className="dash-btn dash-btn--danger dash-btn--sm" onClick={() => deleteReview(review)}>
+                        <Trash2 size={14} />
+                        {t.reviews.delete}
                       </button>
                     )}
                   </div>
