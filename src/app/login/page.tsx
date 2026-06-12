@@ -8,6 +8,7 @@ import { Noto_Sans_JP } from "next/font/google";
 import { api, ApiError } from "@/lib/api";
 import { useApp } from "@/providers/app-provider";
 import { LoginSeagullButton } from "@/components/login/login-seagull-button";
+import { LoginEffectPanel } from "@/components/login/login-effect-panel";
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -123,14 +124,19 @@ export default function LoginPage() {
           <Image
             src={MOBILE_HERO.src}
             alt=""
-            fill
-            className="login-hero__img"
+            width={MOBILE_HERO.width}
+            height={MOBILE_HERO.height}
+            className="login-hero__img login-hero__img--mobile-fit"
             priority
             unoptimized
             sizes="100vw"
           />
         </section>
+
+        {!showLogin && <LoginEffectPanel className="login-effect--mobile-bottom" />}
       </main>
+
+      {!showLogin && <LoginEffectPanel className="login-effect--desktop-fixed" />}
 
       {showLogin && (
         <div className="login-modal" role="presentation">
