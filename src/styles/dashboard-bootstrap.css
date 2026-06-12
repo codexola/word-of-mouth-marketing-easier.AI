@@ -592,6 +592,15 @@ html.dark .dash-table tbody tr:hover {
   font-size: 0.78rem;
 }
 
+.media-gallery-card {
+  background: var(--card);
+  border-color: var(--border) !important;
+}
+
+.media-gallery-thumb {
+  position: relative;
+}
+
 .dash-btn:disabled {
   opacity: 0.55;
   cursor: not-allowed;

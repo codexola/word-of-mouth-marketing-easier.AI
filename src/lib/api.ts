@@ -268,6 +268,22 @@ export const api = {
 
   syncDrive: () => request<{ synced: number; skipped: number }>("/drive/sync", { method: "POST" }),
 
+  getMediaPhotos: (params?: Record<string, string>) => {
+    const query = params ? `?${new URLSearchParams(params)}` : "";
+    return request<{
+      items: MediaPhoto[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    }>(`/media${query}`);
+  },
+
+  deleteMediaPhoto: (id: string) =>
+    request<{ success: boolean; warnings?: string[]; postDeleted?: boolean }>(`/media/${id}`, {
+      method: "DELETE",
+    }),
+
   getLineStatus: () =>
     request<{
       enabled: boolean;
@@ -310,6 +326,24 @@ export const api = {
   regenerateReview: (id: string) =>
     request<ReviewRequest>(`/reviews/${id}/regenerate`, { method: "POST" }),
 };
+
+export interface MediaPhoto {
+  id: string;
+  url: string;
+  fileName?: string | null;
+  mimeType?: string | null;
+  sourceFileId?: string | null;
+  storagePath?: string | null;
+  createdAt: string;
+  postCandidateId: string;
+  postStatus: PostStatus;
+  postSource: "GOOGLE_DRIVE" | "LINE" | "MANUAL";
+  postTitle?: string | null;
+  postRegion?: string | null;
+  approvedPostId?: string | null;
+  approvedStatus?: PostStatus | null;
+  inArchive: boolean;
+}
 
 export interface PostCandidate {
   id: string;

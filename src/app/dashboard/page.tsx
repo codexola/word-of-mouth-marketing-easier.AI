@@ -12,6 +12,7 @@ import { PostReviewModal } from "@/components/posts/post-review-modal";
 import { ProjectFlowRoadmap } from "@/components/dashboard/project-flow-roadmap";
 import { FlowStepBanner } from "@/components/dashboard/flow-step-banner";
 import { FlowPageAssets } from "@/components/dashboard/flow-page-assets";
+import { MediaGallery } from "@/components/dashboard/media-gallery";
 import { PAGE_FLOW_STEPS } from "@/lib/flow-images";
 import { api, PostCandidate } from "@/lib/api";
 import { useApp } from "@/providers/app-provider";
@@ -190,6 +191,8 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
+
+        <MediaGallery />
 
         <PageCard
           title={t.dashboard.recentPosts}
