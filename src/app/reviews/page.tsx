@@ -161,8 +161,7 @@ function ReviewsContent() {
 
       <PageFilterBar>
         <select
-          className="dash-select"
-          style={{ minWidth: "10rem" }}
+          className="dash-select w-100 w-sm-auto"
           value={statusFilter}
           onChange={(e) => {
             const params = new URLSearchParams(searchParams.toString());
@@ -224,8 +223,8 @@ function ReviewsContent() {
           <div className="d-flex flex-column gap-3">
             {reviews.map((review) => (
               <div key={review.id} className="dash-review-item">
-                <div className="d-flex flex-column flex-sm-row align-items-sm-start justify-content-sm-between gap-3 mb-3">
-                  <div>
+                <div className="d-flex flex-column flex-sm-row align-items-sm-start justify-content-sm-between gap-3 mb-3 min-w-0">
+                  <div className="min-w-0 flex-grow-1">
                     <div className="d-flex flex-wrap align-items-center gap-2">
                       <h3 className="h6 fw-bold mb-0">{review.customerName}</h3>
                       <span className={`dash-tag ${statusTag[review.sendStatus]}`}>
@@ -242,7 +241,7 @@ function ReviewsContent() {
                       <p className="small text-muted mb-0 mt-1">LINE: {review.lineUserId}</p>
                     )}
                     {review.reviewUrl && (
-                      <p className="small mb-0 mt-1">
+                      <p className="small mb-0 mt-1 dash-break-url">
                         <a href={review.reviewUrl} target="_blank" rel="noopener noreferrer" className="dash-link">{review.reviewUrl}</a>
                       </p>
                     )}
@@ -255,7 +254,7 @@ function ReviewsContent() {
                       {review.followUpSentAt && <span className="dash-tag dash-tag--success">{t.reviews.followUpSent}</span>}
                     </div>
                   </div>
-                  <div className="d-flex flex-wrap gap-2">
+                  <div className="dash-review-actions d-flex flex-wrap gap-2">
                     {(review.lineUserId || review.customerEmail) && review.sendStatus !== "SENT" && (
                       <button
                         type="button"
@@ -333,15 +332,15 @@ function ReviewsContent() {
                       const sentAt = key === "thankMessage" ? review.thankSentAt : key === "reviewMessage" ? review.reviewSentAt : review.followUpSentAt;
                       const scheduled = key === "thankMessage" ? review.thankScheduledDate : key === "reviewMessage" ? review.reviewScheduledDate : review.followUpScheduledDate;
                       return review[key] ? (
-                        <div key={key} className="dash-card--2d p-3">
-                          <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
-                            <div>
+                        <div key={key} className="dash-card--2d p-3 min-w-0">
+                          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-start gap-2 mb-2">
+                            <div className="min-w-0">
                               <p className="small fw-bold mb-0">{label}</p>
                               {scheduled && !sentAt && (
                                 <p className="small text-muted mb-0">{formatDate(scheduled)}</p>
                               )}
                             </div>
-                            <div className="d-flex gap-1">
+                            <div className="dash-message-actions d-flex flex-wrap gap-1">
                               {review.lineUserId && !sentAt && (
                                 <button
                                   type="button"

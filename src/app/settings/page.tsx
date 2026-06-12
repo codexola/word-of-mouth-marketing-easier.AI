@@ -309,11 +309,11 @@ function SettingsContent() {
                 <div className="dash-form-grid dash-form-grid--2">
                   <div>
                     <label className="dash-label">{t.settings.lineSecret}</label>
-                    <input type="password" className="dash-input" value={settings.lineChannelSecret || ""} onChange={(e) => setSettings({ ...settings, lineChannelSecret: e.target.value })} placeholder="LINE Channel Secret" />
+                    <input type="password" className="dash-input" value={settings.lineChannelSecret || ""} onChange={(e) => setSettings({ ...settings, lineChannelSecret: e.target.value })} placeholder={settings.hasLineChannelSecret ? t.settings.secretConfigured : "LINE Channel Secret"} />
                   </div>
                   <div>
                     <label className="dash-label">{t.settings.lineToken}</label>
-                    <input type="password" className="dash-input" value={settings.lineChannelAccessToken || ""} onChange={(e) => setSettings({ ...settings, lineChannelAccessToken: e.target.value })} placeholder="LINE Channel Access Token" />
+                    <input type="password" className="dash-input" value={settings.lineChannelAccessToken || ""} onChange={(e) => setSettings({ ...settings, lineChannelAccessToken: e.target.value })} placeholder={settings.hasLineChannelAccessToken ? t.settings.secretConfigured : "LINE Channel Access Token"} />
                   </div>
                 </div>
                 {lineStatus && (
@@ -434,7 +434,7 @@ function SettingsContent() {
                     </div>
                     <div>
                       <label className="dash-label">{t.settings.smtpPass}</label>
-                      <input type="password" className="dash-input" value={settings.smtpPass || ""} onChange={(e) => setSettings({ ...settings, smtpPass: e.target.value })} />
+                      <input type="password" className="dash-input" value={settings.smtpPass || ""} onChange={(e) => setSettings({ ...settings, smtpPass: e.target.value })} placeholder={settings.hasSmtpPass ? t.settings.secretConfigured : undefined} />
                     </div>
                     <div style={{ gridColumn: "1 / -1" }}>
                       <label className="dash-label">{t.settings.smtpFrom}</label>

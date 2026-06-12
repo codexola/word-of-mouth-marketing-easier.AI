@@ -288,6 +288,8 @@ html.dark .dashboard-icon-box {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (min-width: 576px) {
@@ -338,6 +340,8 @@ html.dark .dashboard-icon-box {
   background: var(--dash-card-bg);
   border: 2px solid var(--bs-border-color);
   border-radius: var(--bs-border-radius-lg);
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* 3D elevated card */
@@ -345,6 +349,8 @@ html.dark .dashboard-icon-box {
   background: var(--dash-card-bg);
   border: 2px solid #93c5fd;
   border-radius: var(--bs-border-radius-lg);
+  min-width: 0;
+  max-width: 100%;
   box-shadow:
     0 1px 0 #ffffff inset,
     0 4px 0 #bfdbfe,
@@ -398,6 +404,8 @@ html.dark .dash-card__header {
 
 .dash-card__body {
   padding: 1rem 1.125rem;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 @media (min-width: 576px) {
@@ -688,6 +696,19 @@ html.dark .dash-table tbody tr:hover {
   background: #ffffff;
   box-shadow: 0 3px 0 #dbeafe, 0 6px 16px rgba(37, 99, 235, 0.08);
   transition: transform 0.15s, box-shadow 0.15s;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.dash-break-url {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dash-break-url .dash-link {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .dash-review-item:hover {
@@ -880,6 +901,100 @@ html.dark .dash-modal__footer {
   overflow: hidden;
   background: #eff6ff;
   box-shadow: 0 2px 0 #dbeafe;
+}
+
+/* Mobile card list (replaces wide tables on small screens) */
+.dash-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.dash-mobile-card {
+  border: 2px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg);
+  padding: 0.875rem;
+  background: var(--dash-card-bg);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dash-mobile-card__header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.dash-mobile-card__main {
+  min-width: 0;
+}
+
+.dash-mobile-card__title {
+  display: block;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dash-mobile-card__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+}
+
+.dash-mobile-card__meta dt {
+  font-weight: 600;
+  color: var(--bs-secondary);
+  margin: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dash-mobile-card__meta dd {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dash-mobile-card__full {
+  grid-column: 1 / -1;
+}
+
+.dash-mobile-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+@media (max-width: 575.98px) {
+  .dash-mobile-card__actions .dash-btn,
+  .dash-review-actions .dash-btn {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .dash-review-actions {
+    width: 100%;
+  }
+
+  .dash-message-actions {
+    width: 100%;
+  }
+
+  .dash-message-actions .dash-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+  }
 }
 
 .dash-link {

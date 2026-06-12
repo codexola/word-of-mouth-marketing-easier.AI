@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { ImageIcon } from "lucide-react";
+import { PostListMobileCards } from "@/components/posts/post-list-mobile-cards";
 import { StatusBadge } from "@/components/posts/status-badge";
 import { PostCandidate } from "@/lib/api";
 import { getPrimaryPostImageUrl } from "@/lib/post-images";
@@ -16,7 +19,11 @@ export function PostListTable({ posts, showBody = true }: PostListTableProps) {
   const { t } = useApp();
 
   return (
-    <div className="dash-table-wrap">
+    <>
+      <div className="d-md-none">
+        <PostListMobileCards posts={posts} showBody={showBody} />
+      </div>
+      <div className="dash-table-wrap d-none d-md-block">
       <table className="dash-table">
         <thead>
           <tr>
@@ -69,5 +76,6 @@ export function PostListTable({ posts, showBody = true }: PostListTableProps) {
         </tbody>
       </table>
     </div>
+    </>
   );
 }

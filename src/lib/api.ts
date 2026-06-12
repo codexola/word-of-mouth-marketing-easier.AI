@@ -164,7 +164,7 @@ export const api = {
   approvePost: (id: string) => request(`/posts/${id}/approve`, { method: "POST" }),
 
   rejectPost: (id: string, reason?: string) =>
-    request<PostCandidate["generation"]>(`/posts/${id}/reject`, {
+    request<PostCandidateDetail>(`/posts/${id}/reject`, {
       method: "POST",
       body: JSON.stringify({ reason }),
     }),
@@ -296,7 +296,7 @@ export const api = {
 
   getReviews: (params?: Record<string, string>) => {
     const query = params ? `?${new URLSearchParams(params)}` : "";
-    return request<{ items: ReviewRequest[]; total: number }>(`/reviews${query}`);
+    return request<{ items: ReviewRequest[]; total: number; page: number; limit: number; totalPages: number }>(`/reviews${query}`);
   },
 
   createReview: (data: {
@@ -426,6 +426,9 @@ export interface AppSettings {
   openaiModel: string;
   lineChannelSecret?: string | null;
   lineChannelAccessToken?: string | null;
+  hasLineChannelSecret?: boolean;
+  hasLineChannelAccessToken?: boolean;
+  hasSmtpPass?: boolean;
   lineEnabled?: boolean;
   lineAutoSendEnabled?: boolean;
   emailAutoSendEnabled?: boolean;

@@ -139,7 +139,7 @@ function PostsContent() {
       )}
 
       <PageFilterBar>
-        <div className="dash-input-wrap" style={{ minWidth: "12rem", flex: "1 1 14rem" }}>
+        <div className="dash-input-wrap flex-grow-1">
           <Search size={16} className="dash-input-icon" />
           <input
             type="search"
@@ -149,12 +149,12 @@ function PostsContent() {
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           />
         </div>
-        <select className="dash-select" style={{ flex: "0 1 auto", minWidth: "10rem" }} value={status} onChange={(e) => updateFilter("status", e.target.value)}>
+        <select className="dash-select w-100 w-sm-auto" value={status} onChange={(e) => updateFilter("status", e.target.value)}>
           {statusOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>{t.posts.statusFilter}: {opt.label}</option>
           ))}
         </select>
-        <select className="dash-select" style={{ flex: "0 1 auto", minWidth: "10rem" }} value={source} onChange={(e) => updateFilter("source", e.target.value)}>
+        <select className="dash-select w-100 w-sm-auto" value={source} onChange={(e) => updateFilter("source", e.target.value)}>
           {sourceOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>{t.posts.sourceFilter}: {opt.label}</option>
           ))}

@@ -2,17 +2,16 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Search, Copy, CheckCircle, Send, Pencil, Trash2, Save, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageHeader, PageCard, PageFilterBar, PageLoading, PageEmpty } from "@/components/layout/page-shell";
 import Image from "next/image";
 import { FlowStepBanner } from "@/components/dashboard/flow-step-banner";
 import { FlowPageAssets } from "@/components/dashboard/flow-page-assets";
 import { FLOW_IMAGES, PAGE_FLOW_STEPS } from "@/lib/flow-images";
-import { StatusBadge } from "@/components/posts/status-badge";
+import { ApprovedPostList } from "@/components/posts/approved-post-list";
 import { Pagination } from "@/components/ui/pagination";
 import { api, ApprovedPost, PostStatus, ApiError } from "@/lib/api";
-import { formatDate, truncate } from "@/lib/utils";
 import { useApp } from "@/providers/app-provider";
 
 function HistoryContent() {
@@ -70,7 +69,7 @@ function HistoryContent() {
       <FlowPageAssets page="history" />
 
       <PageFilterBar>
-        <div className="dash-input-wrap" style={{ minWidth: "12rem", flex: "1 1 14rem" }}>
+        <div className="dash-input-wrap flex-grow-1">
           <Search size={16} className="dash-input-icon" />
           <input
             type="search"
@@ -81,8 +80,7 @@ function HistoryContent() {
           />
         </div>
         <select
-          className="dash-select"
-          style={{ flex: "0 1 auto", minWidth: "10rem" }}
+          className="dash-select w-100 w-sm-auto"
           value={status}
           onChange={(e) => {
             const params = new URLSearchParams(searchParams.toString());
@@ -128,175 +126,65 @@ function HistoryContent() {
           <PageEmpty message={t.history.noPosts} />
         ) : (
           <>
-            <div className="dash-table-wrap">
-              <table className="dash-table">
-                <thead>
-                  <tr>
-                    <th>{t.posts.photo}</th>
-                    <th>{t.posts.postTitle}</th>
-                    <th>{t.posts.body}</th>
-                    <th>{t.posts.status}</th>
-                    <th>{t.history.approver}</th>
-                    <th>{t.history.approvedAt}</th>
-                    <th>{t.history.postedAt}</th>
-                    <th>{t.common.copy}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {posts.map((post) => (
-                    <tr key={post.id}>
-                      <td>
-                        {post.imageUrls?.[0] ? (
-                          <Image src={post.imageUrls[0]} alt="" width={48} height={48} unoptimized className="rounded border" style={{ objectFit: "cover" }} />
-                        ) : (
-                          <span className="text-muted small">-</span>
-                        )}
-                      </td>
-                      <td className="fw-semibold">
-                        {editingId === post.id ? (
-                          <input className="dash-input dash-input--sm" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
-                        ) : (
-                          post.title
-                        )}
-                      </td>
-                      <td className="text-muted" style={{ maxWidth: "12rem" }}>
-                        {editingId === post.id ? (
-                          <textarea className="dash-textarea" rows={3} value={editBody} onChange={(e) => setEditBody(e.target.value)} />
-                        ) : (
-                          truncate(post.body, 50)
-                        )}
-                      </td>
-                      <td><StatusBadge status={post.status} /></td>
-                      <td className="text-muted small">{post.approvedBy?.name || "-"}</td>
-                      <td className="text-muted">{formatDate(post.approvedAt)}</td>
-                      <td className="text-muted">{post.postedAt ? formatDate(post.postedAt) : "-"}</td>
-                      <td>
-                        <div className="d-flex flex-wrap gap-1">
-                          <button
-                            type="button"
-                            className="dash-btn dash-btn--outline dash-btn--sm"
-                            onClick={() => {
-                              navigator.clipboard.writeText(`${post.title}\n\n${post.body}`);
-                              alert(t.history.copyDone);
-                            }}
-                          >
-                            <Copy size={14} />
-                            {t.history.copyForPost}
-                          </button>
-                          {post.status !== "POSTED" && (
-                            <>
-                              <button
-                                type="button"
-                                className="dash-btn dash-btn--primary dash-btn--sm"
-                                onClick={async () => {
-                                  try {
-                                    await api.publishToGbp(post.id);
-                                    alert(t.history.publishGbpDone);
-                                    loadPosts();
-                                  } catch (err) {
-                                    alert(err instanceof ApiError ? err.message : t.history.publishGbpFailed);
-                                  }
-                                }}
-                              >
-                                <Send size={14} />
-                                {t.history.publishGbp}
-                              </button>
-                              <button
-                                type="button"
-                                className="dash-btn dash-btn--success dash-btn--sm"
-                                onClick={async () => {
-                                  await api.markAsPosted(post.id);
-                                  loadPosts();
-                                }}
-                              >
-                                <CheckCircle size={14} />
-                                {t.history.markPosted}
-                              </button>
-                            </>
-                          )}
-                          {post.gbpPostId && (
-                            <span className="dash-tag dash-tag--success">{t.history.gbpPosted}</span>
-                          )}
-                          {post.errorMessage && (
-                            <span className="dash-tag dash-tag--danger small" title={post.errorMessage}>GBP ERR</span>
-                          )}
-                          {editingId === post.id ? (
-                            <>
-                              <button
-                                type="button"
-                                className="dash-btn dash-btn--primary dash-btn--sm"
-                                disabled={!!actionLoading}
-                                onClick={async () => {
-                                  setActionLoading("save");
-                                  try {
-                                    await api.updateApprovedPost(post.id, { title: editTitle, body: editBody });
-                                    setEditingId(null);
-                                    alert(t.history.editDone);
-                                    loadPosts();
-                                  } catch (err) {
-                                    alert(err instanceof ApiError ? err.message : t.history.editFailed);
-                                  } finally {
-                                    setActionLoading("");
-                                  }
-                                }}
-                              >
-                                <Save size={14} />
-                                {t.history.saveEdit}
-                              </button>
-                              <button
-                                type="button"
-                                className="dash-btn dash-btn--outline dash-btn--sm"
-                                onClick={() => setEditingId(null)}
-                              >
-                                <X size={14} />
-                                {t.common.cancel}
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <button
-                                type="button"
-                                className="dash-btn dash-btn--outline dash-btn--sm"
-                                onClick={() => {
-                                  setEditingId(post.id);
-                                  setEditTitle(post.title);
-                                  setEditBody(post.body);
-                                }}
-                              >
-                                <Pencil size={14} />
-                                {t.history.editPost}
-                              </button>
-                              <button
-                                type="button"
-                                className="dash-btn dash-btn--danger dash-btn--sm"
-                                disabled={!!actionLoading}
-                                onClick={async () => {
-                                  if (!window.confirm(t.history.deleteConfirm)) return;
-                                  setActionLoading("delete");
-                                  try {
-                                    const res = await api.deleteApprovedPost(post.id);
-                                    if (res.gbpWarning) alert(`${t.history.deleteDone}\n${res.gbpWarning}`);
-                                    else alert(t.history.deleteDone);
-                                    loadPosts();
-                                  } catch (err) {
-                                    alert(err instanceof ApiError ? err.message : t.history.deleteFailed);
-                                  } finally {
-                                    setActionLoading("");
-                                  }
-                                }}
-                              >
-                                <Trash2 size={14} />
-                                {t.history.deletePost}
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <ApprovedPostList
+              posts={posts}
+              editingId={editingId}
+              editTitle={editTitle}
+              editBody={editBody}
+              actionLoading={actionLoading}
+              onEditTitleChange={setEditTitle}
+              onEditBodyChange={setEditBody}
+              onStartEdit={(post) => {
+                setEditingId(post.id);
+                setEditTitle(post.title);
+                setEditBody(post.body);
+              }}
+              onCancelEdit={() => setEditingId(null)}
+              onSaveEdit={async (postId) => {
+                setActionLoading("save");
+                try {
+                  await api.updateApprovedPost(postId, { title: editTitle, body: editBody });
+                  setEditingId(null);
+                  alert(t.history.editDone);
+                  loadPosts();
+                } catch (err) {
+                  alert(err instanceof ApiError ? err.message : t.history.editFailed);
+                } finally {
+                  setActionLoading("");
+                }
+              }}
+              onCopy={(post) => {
+                navigator.clipboard.writeText(`${post.title}\n\n${post.body}`);
+                alert(t.history.copyDone);
+              }}
+              onPublishGbp={async (postId) => {
+                try {
+                  await api.publishToGbp(postId);
+                  alert(t.history.publishGbpDone);
+                  loadPosts();
+                } catch (err) {
+                  alert(err instanceof ApiError ? err.message : t.history.publishGbpFailed);
+                }
+              }}
+              onMarkPosted={async (postId) => {
+                await api.markAsPosted(postId);
+                loadPosts();
+              }}
+              onDelete={async (postId) => {
+                if (!window.confirm(t.history.deleteConfirm)) return;
+                setActionLoading("delete");
+                try {
+                  const res = await api.deleteApprovedPost(postId);
+                  if (res.gbpWarning) alert(`${t.history.deleteDone}\n${res.gbpWarning}`);
+                  else alert(t.history.deleteDone);
+                  loadPosts();
+                } catch (err) {
+                  alert(err instanceof ApiError ? err.message : t.history.deleteFailed);
+                } finally {
+                  setActionLoading("");
+                }
+              }}
+            />
             <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </>
         )}

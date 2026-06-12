@@ -14,7 +14,33 @@ export function LoginEffectPanel({ className = "" }: LoginEffectPanelProps) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.play().catch(() => {});
+
+    const play = () => {
+      video.play().catch(() => {});
+    };
+
+    play();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) play();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(video);
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") play();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   return (

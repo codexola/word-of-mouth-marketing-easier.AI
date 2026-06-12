@@ -49,6 +49,80 @@ svg {
   overflow-x: hidden;
 }
 
+/* Login route — zero margins, full viewport */
+html:has(.login-page),
+body:has(.login-page) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body:has(.login-page) .app-root {
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  background: #0a1628;
+}
+
+@media (min-width: 640px) {
+  html:has(.login-page),
+  body:has(.login-page) {
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 639px) {
+  html:has(.login-page),
+  body:has(.login-page) {
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body:has(.login-page) .app-root {
+    min-height: auto;
+    height: auto;
+  }
+}
+
+/* Dashboard sections — prevent horizontal bleed on phones */
+.dashboard-main {
+  min-width: 0;
+}
+
+.dash-filter-bar .dash-input-wrap,
+.dash-filter-bar .dash-select {
+  min-width: 0 !important;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 575.98px) {
+  .dash-page-header .dash-page-actions {
+    width: 100%;
+  }
+
+  .dash-page-header .dash-page-actions .dash-btn {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .dash-card__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dash-card__header .dash-btn {
+    width: 100%;
+    white-space: normal;
+  }
+}
+
 /* Modals on watch-sized screens */
 @media (max-width: 360px) {
   .modal-sheet {

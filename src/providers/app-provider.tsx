@@ -199,7 +199,32 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [locale, setLocale, theme, setTheme, toggleTheme, t, user, authLoading, canManageUsers, isAdmin, logout, refreshUser]
   );
 
+  const isLoginPage = pathname.startsWith("/login");
+
   if (!hydrated) {
+    if (isLoginPage) {
+      return (
+        <AppContext.Provider
+          value={{
+            locale: "ja",
+            setLocale: () => {},
+            theme: "light",
+            setTheme: () => {},
+            toggleTheme: () => {},
+            t: translations.ja,
+            user: null,
+            isAuthenticated: false,
+            authLoading: false,
+            canManageUsers: false,
+            isAdmin: false,
+            logout: () => {},
+            refreshUser: async () => {},
+          }}
+        >
+          {children}
+        </AppContext.Provider>
+      );
+    }
     return (
       <div className="flex h-screen items-center justify-center bg-background text-muted-foreground">
         ...

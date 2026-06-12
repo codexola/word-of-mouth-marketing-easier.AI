@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { X } from "lucide-react";
 import { Noto_Sans_JP } from "next/font/google";
 import { api, ApiError } from "@/lib/api";
@@ -108,28 +107,27 @@ export default function LoginPage() {
 
       <main className="login-landing">
         <section className="login-hero login-hero--desktop" aria-label={t.login.productName}>
-          <Image
+          {/* Native img avoids Next/Image SSR visibility:hidden hydration mismatch */}
+          <img
             src={DESKTOP_HERO.src}
             alt=""
             width={DESKTOP_HERO.width}
             height={DESKTOP_HERO.height}
             className="login-hero__img login-hero__img--desktop-fit"
-            priority
-            unoptimized
-            sizes="100vw"
+            decoding="async"
+            fetchPriority="high"
           />
         </section>
 
         <section className="login-hero login-hero--mobile" aria-label={t.login.productName}>
-          <Image
+          <img
             src={MOBILE_HERO.src}
             alt=""
             width={MOBILE_HERO.width}
             height={MOBILE_HERO.height}
             className="login-hero__img login-hero__img--mobile-fit"
-            priority
-            unoptimized
-            sizes="100vw"
+            decoding="async"
+            fetchPriority="high"
           />
         </section>
 
@@ -154,14 +152,13 @@ export default function LoginPage() {
             <div className="login-page__card-border">
               <div className="login-page__card">
                 <div className="login-page__logo" id="login-title">
-                  <Image
+                  <img
                     src="/logo.png"
                     alt={t.login.productName}
                     width={120}
                     height={120}
                     className="login-page__logo-img"
-                    priority
-                    unoptimized
+                    decoding="async"
                   />
                 </div>
 

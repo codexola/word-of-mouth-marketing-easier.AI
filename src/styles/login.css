@@ -17,6 +17,8 @@
   --login-shadow: 0 12px 40px rgba(21, 42, 69, 0.22);
   --login-btn-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
   position: relative;
+  margin: 0;
+  padding: 0;
   height: 100dvh;
   height: 100vh;
   max-height: 100dvh;
@@ -43,10 +45,12 @@
     min-height: 100vh;
     max-height: none;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: visible;
   }
 
   .login-page--modal-open {
+    position: fixed;
+    inset: 0;
     height: 100dvh;
     height: 100vh;
     max-height: 100dvh;
@@ -187,96 +191,91 @@
   }
 }
 
-/* ── Landing hero — always fills viewport ── */
+/* ── Landing hero — edge-to-edge, fills viewport on PC ── */
 .login-landing {
   position: relative;
   width: 100%;
   height: 100%;
   max-height: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
 }
 
 .login-hero {
-  position: absolute;
-  inset: 0;
+  margin: 0;
+  padding: 0;
   width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
 .login-hero--desktop {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  inset: 0;
+  display: block;
 }
 
 .login-hero--mobile {
   display: none;
 }
 
+.login-hero__img {
+  display: block;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* PC: cover entire screen — no top/bottom/side margins */
+@media (min-width: 640px) {
+  .login-hero__img--desktop-fit {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+/* Mobile: full-width stacked page — scroll to see hero + video at bottom */
 @media (max-width: 639px) {
   .login-hero--desktop {
     display: none;
   }
 
-  .login-hero--mobile {
-    display: block;
-    position: relative;
-    height: auto;
-    overflow: visible;
-  }
-
   .login-landing {
-    position: relative;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
     height: auto;
     max-height: none;
+    min-height: 100dvh;
+    min-height: 100vh;
     overflow: visible;
   }
 
   .login-hero--mobile {
+    display: block;
     position: relative;
     inset: auto;
     flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    overflow: visible;
   }
 
   .login-hero__img--mobile-fit {
-    position: relative !important;
     display: block;
-    width: 100% !important;
-    height: auto !important;
+    width: 100%;
+    height: auto;
     max-width: 100%;
+    margin: 0;
     object-fit: contain;
     object-position: center top;
-  }
-}
-
-.login-hero__img {
-  object-fit: cover;
-  object-position: center center;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-@media (max-width: 639px) {
-  .login-hero--mobile .login-hero__img {
-    object-position: center top;
-  }
-}
-
-/* PC: full width, height capped to viewport — letterbox top/bottom only */
-@media (min-width: 640px) {
-  .login-hero__img--desktop-fit {
-    position: relative !important;
-    display: block;
-    width: 100% !important;
-    height: auto !important;
-    max-width: 100%;
-    max-height: 100dvh;
-    max-height: 100vh;
-    object-fit: contain;
-    object-position: center center;
   }
 }
 
@@ -318,10 +317,16 @@
   }
 
   .login-effect--mobile-bottom {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    margin: 0 auto;
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0;
+    padding: 0.75rem 0.5rem;
     padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    box-sizing: border-box;
   }
 }
 
