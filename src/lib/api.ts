@@ -193,6 +193,22 @@ export const api = {
   publishToGbp: (id: string) =>
     request<ApprovedPost>(`/posts/approved/${id}/publish-gbp`, { method: "POST" }),
 
+  updateApprovedPost: (id: string, data: { title: string; body: string }) =>
+    request<PostCandidateDetail>(`/posts/approved/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+
+  deleteApprovedPost: (id: string) =>
+    request<{ success: boolean; gbpWarning?: string }>(`/posts/approved/${id}`, {
+      method: "DELETE",
+    }),
+
+  deletePost: (id: string) =>
+    request<{ success: boolean; gbpWarning?: string }>(`/posts/${id}`, {
+      method: "DELETE",
+    }),
+
   getGbpStatus: () =>
     request<{
       oauthConfigured: boolean;

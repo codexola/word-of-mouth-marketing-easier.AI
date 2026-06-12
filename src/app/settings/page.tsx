@@ -31,6 +31,8 @@ function SettingsContent() {
     oauthConfigured: boolean;
     connected: boolean;
     autoPostEnabled: boolean;
+    readyToPublish?: boolean;
+    issues?: string[];
     locationName?: string | null;
   } | null>(null);
   const [gbpLocations, setGbpLocations] = useState<

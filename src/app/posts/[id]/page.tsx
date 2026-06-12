@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, RefreshCw, Save, Check, X, Copy, RotateCcw } from "lucide-react";
+import { ArrowLeft, RefreshCw, Save, Check, X, Copy, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageCard, PageLoading } from "@/components/layout/page-shell";
@@ -11,7 +11,7 @@ import { FlowStepBanner } from "@/components/dashboard/flow-step-banner";
 import { FlowPageAssets } from "@/components/dashboard/flow-page-assets";
 import { PAGE_FLOW_STEPS } from "@/lib/flow-images";
 import { StatusBadge } from "@/components/posts/status-badge";
-import { api, PostCandidateDetail } from "@/lib/api";
+import { api, ApiError, PostCandidateDetail } from "@/lib/api";
 import { formatDate } from "@/lib/utils";
 import { useApp } from "@/providers/app-provider";
 
@@ -66,10 +66,10 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   const isCancelled = post.status === "CANCELLED";
   const isError = post.status === "ERROR";
-  const isLocked = ["APPROVED", "POSTED", "CANCELLED"].includes(post.status);
+  const isPublished = ["APPROVED", "POSTED"].includes(post.status);
+  const isLocked = isCancelled;
   const isRejected = post.status === "REJECTED";
-  const lockedStatus =
-    post.status === "CANCELLED" ? t.status.CANCELLED : t.status.APPROVED;
+  const lockedStatus = t.status.CANCELLED;
 
   return (
     <DashboardLayout>
@@ -131,6 +131,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
               {isLocked && (
                 <div className="dash-alert dash-alert--info mb-3">
                   {t.postDetail.locked.replace("{status}", lockedStatus)}
+                </div>
+              )}
+              {isPublished && (
+                <div className="dash-alert dash-alert--info mb-3">
+                  {t.postDetail.publishedEditHint}
                   {post.approvedPost && (
                     <Link href="/history" className="dash-link ms-1">{t.postDetail.viewHistory}</Link>
                   )}
@@ -206,7 +211,18 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                       </button>
                     </>
                   )}
-                  {!isLocked && !isRejected && (
+                  {isPublished && (
+                    <button
+                      type="button"
+                      className="dash-btn dash-btn--outline dash-btn--sm"
+                      onClick={() => runAction("save", () => api.updatePostContent(id, { title, body }))}
+                      disabled={!!actionLoading || !title || !body}
+                    >
+                      <Save size={14} />
+                      {actionLoading === "save" ? t.postDetail.saving : t.common.save}
+                    </button>
+                  )}
+                  {!isLocked && !isRejected && !isPublished && (
                     <>
                       <button type="button" className="dash-btn dash-btn--outline dash-btn--sm" onClick={() => runAction("regenerate", () => api.generatePost(id))} disabled={!!actionLoading}>
                         <RefreshCw size={14} />
@@ -241,6 +257,28 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
                   <button type="button" className="dash-btn dash-btn--outline dash-btn--sm" onClick={copyToClipboard}>
                     <Copy size={14} />
                     {t.common.copy}
+                  </button>
+                  <button
+                    type="button"
+                    className="dash-btn dash-btn--danger dash-btn--sm"
+                    disabled={!!actionLoading}
+                    onClick={async () => {
+                      if (!window.confirm(t.postDetail.deleteConfirm)) return;
+                      setActionLoading("delete");
+                      try {
+                        const res = await api.deletePost(id);
+                        if (res.gbpWarning) {
+                          alert(`${t.postDetail.deleteDone}\n${res.gbpWarning}`);
+                        }
+                        router.push("/posts");
+                      } catch (err) {
+                        alert(err instanceof ApiError ? err.message : t.postDetail.actionFailed);
+                        setActionLoading("");
+                      }
+                    }}
+                  >
+                    <Trash2 size={14} />
+                    {actionLoading === "delete" ? t.postDetail.deleting : t.postDetail.deletePost}
                   </button>
                 </div>
               </div>

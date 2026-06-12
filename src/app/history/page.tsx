@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Search, Copy, CheckCircle, Send } from "lucide-react";
+import { Search, Copy, CheckCircle, Send, Pencil, Trash2, Save, X } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageHeader, PageCard, PageFilterBar, PageLoading, PageEmpty } from "@/components/layout/page-shell";
 import Image from "next/image";
@@ -25,6 +25,10 @@ function HistoryContent() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
+  const [actionLoading, setActionLoading] = useState("");
   const status = searchParams.get("status") || "";
 
   const loadPosts = () => {
@@ -148,8 +152,20 @@ function HistoryContent() {
                           <span className="text-muted small">-</span>
                         )}
                       </td>
-                      <td className="fw-semibold">{post.title}</td>
-                      <td className="text-muted" style={{ maxWidth: "12rem" }}>{truncate(post.body, 50)}</td>
+                      <td className="fw-semibold">
+                        {editingId === post.id ? (
+                          <input className="dash-input dash-input--sm" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
+                        ) : (
+                          post.title
+                        )}
+                      </td>
+                      <td className="text-muted" style={{ maxWidth: "12rem" }}>
+                        {editingId === post.id ? (
+                          <textarea className="dash-textarea" rows={3} value={editBody} onChange={(e) => setEditBody(e.target.value)} />
+                        ) : (
+                          truncate(post.body, 50)
+                        )}
+                      </td>
                       <td><StatusBadge status={post.status} /></td>
                       <td className="text-muted small">{post.approvedBy?.name || "-"}</td>
                       <td className="text-muted">{formatDate(post.approvedAt)}</td>
@@ -203,6 +219,76 @@ function HistoryContent() {
                           )}
                           {post.errorMessage && (
                             <span className="dash-tag dash-tag--danger small" title={post.errorMessage}>GBP ERR</span>
+                          )}
+                          {editingId === post.id ? (
+                            <>
+                              <button
+                                type="button"
+                                className="dash-btn dash-btn--primary dash-btn--sm"
+                                disabled={!!actionLoading}
+                                onClick={async () => {
+                                  setActionLoading("save");
+                                  try {
+                                    await api.updateApprovedPost(post.id, { title: editTitle, body: editBody });
+                                    setEditingId(null);
+                                    alert(t.history.editDone);
+                                    loadPosts();
+                                  } catch (err) {
+                                    alert(err instanceof ApiError ? err.message : t.history.editFailed);
+                                  } finally {
+                                    setActionLoading("");
+                                  }
+                                }}
+                              >
+                                <Save size={14} />
+                                {t.history.saveEdit}
+                              </button>
+                              <button
+                                type="button"
+                                className="dash-btn dash-btn--outline dash-btn--sm"
+                                onClick={() => setEditingId(null)}
+                              >
+                                <X size={14} />
+                                {t.common.cancel}
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                className="dash-btn dash-btn--outline dash-btn--sm"
+                                onClick={() => {
+                                  setEditingId(post.id);
+                                  setEditTitle(post.title);
+                                  setEditBody(post.body);
+                                }}
+                              >
+                                <Pencil size={14} />
+                                {t.history.editPost}
+                              </button>
+                              <button
+                                type="button"
+                                className="dash-btn dash-btn--danger dash-btn--sm"
+                                disabled={!!actionLoading}
+                                onClick={async () => {
+                                  if (!window.confirm(t.history.deleteConfirm)) return;
+                                  setActionLoading("delete");
+                                  try {
+                                    const res = await api.deleteApprovedPost(post.id);
+                                    if (res.gbpWarning) alert(`${t.history.deleteDone}\n${res.gbpWarning}`);
+                                    else alert(t.history.deleteDone);
+                                    loadPosts();
+                                  } catch (err) {
+                                    alert(err instanceof ApiError ? err.message : t.history.deleteFailed);
+                                  } finally {
+                                    setActionLoading("");
+                                  }
+                                }}
+                              >
+                                <Trash2 size={14} />
+                                {t.history.deletePost}
+                              </button>
+                            </>
                           )}
                         </div>
                       </td>
