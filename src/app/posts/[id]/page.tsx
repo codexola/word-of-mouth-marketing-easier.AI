@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { PostPhoto } from "@/components/posts/post-thumbnail";
 import { ArrowLeft, RefreshCw, Save, Check, X, Copy, RotateCcw, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
@@ -102,10 +102,13 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
               {displayImages.length > 0 ? (
                 <div className="row g-2">
                   {displayImages.map((url, index) => (
-                    <div key={`${url}-${index}`} className="col-6">
-                      <div className="position-relative rounded overflow-hidden border" style={{ aspectRatio: "1", borderColor: "var(--bs-border-color)", borderWidth: "2px", boxShadow: "0 3px 0 #dbeafe" }}>
-                        <Image src={url} alt="" fill className="object-cover" unoptimized />
-                      </div>
+                    <div key={`${url}-${index}`} className="col-6 col-md-4">
+                      <PostPhoto
+                        src={url}
+                        alt=""
+                        className="border shadow-sm"
+                        aspectRatio="1"
+                      />
                     </div>
                   ))}
                 </div>

@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
-const backendUrl = process.env.BACKEND_URL?.replace(/\/$/, "");
+const backendUrl = (
+  process.env.BACKEND_URL ||
+  (process.env.NODE_ENV === "development"
+    ? `http://localhost:${process.env.NEXT_PUBLIC_API_PORT || "4000"}`
+    : undefined)
+)?.replace(/\/$/, "");
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["103.179.45.111"],

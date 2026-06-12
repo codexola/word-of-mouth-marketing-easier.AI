@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Copy, CheckCircle, Send, Pencil, Trash2, Save, X } from "lucide-react";
+import { PostThumbnail } from "@/components/posts/post-thumbnail";
 import { StatusBadge } from "@/components/posts/status-badge";
 import { ApprovedPost } from "@/lib/api";
+import { getApprovedPostImageUrl } from "@/lib/post-images";
 import { formatDate, truncate } from "@/lib/utils";
 import { useApp } from "@/providers/app-provider";
 
@@ -112,19 +113,7 @@ export function ApprovedPostList(props: ApprovedPostListProps) {
           {posts.map((post) => (
             <article key={post.id} className="dash-mobile-card">
               <div className="dash-mobile-card__header">
-                {post.imageUrls?.[0] ? (
-                  <Image
-                    src={post.imageUrls[0]}
-                    alt=""
-                    width={48}
-                    height={48}
-                    unoptimized
-                    className="rounded border shrink-0"
-                    style={{ objectFit: "cover" }}
-                  />
-                ) : (
-                  <span className="text-muted small shrink-0">-</span>
-                )}
+                <PostThumbnail src={getApprovedPostImageUrl(post)} size="sm" className="shrink-0" />
                 <div className="dash-mobile-card__main min-w-0 flex-grow-1">
                   {editingId === post.id ? (
                     <input
@@ -192,19 +181,7 @@ export function ApprovedPostList(props: ApprovedPostListProps) {
             {posts.map((post) => (
               <tr key={post.id}>
                 <td>
-                  {post.imageUrls?.[0] ? (
-                    <Image
-                      src={post.imageUrls[0]}
-                      alt=""
-                      width={48}
-                      height={48}
-                      unoptimized
-                      className="rounded border"
-                      style={{ objectFit: "cover" }}
-                    />
-                  ) : (
-                    <span className="text-muted small">-</span>
-                  )}
+                  <PostThumbnail src={getApprovedPostImageUrl(post)} size="sm" />
                 </td>
                 <td className="fw-semibold">
                   {editingId === post.id ? (

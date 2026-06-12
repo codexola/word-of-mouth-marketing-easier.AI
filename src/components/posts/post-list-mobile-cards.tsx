@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { ImageIcon } from "lucide-react";
 import { StatusBadge } from "@/components/posts/status-badge";
+import { PostThumbnail } from "@/components/posts/post-thumbnail";
 import { PostCandidate } from "@/lib/api";
 import { getPrimaryPostImageUrl } from "@/lib/post-images";
 import { formatDate, truncate } from "@/lib/utils";
@@ -25,15 +24,7 @@ export function PostListMobileCards({ posts, showBody = true }: PostListMobileCa
           <article key={post.id} className="dash-mobile-card">
             <div className="dash-mobile-card__header">
               <Link href={`/posts/${post.id}`} className="shrink-0">
-                {thumbUrl ? (
-                  <div className="dash-thumb position-relative">
-                    <Image src={thumbUrl} alt="" fill className="object-cover" unoptimized />
-                  </div>
-                ) : (
-                  <div className="dash-thumb d-flex align-items-center justify-content-center">
-                    <ImageIcon size={18} className="text-muted" />
-                  </div>
-                )}
+                <PostThumbnail src={thumbUrl} size="md" />
               </Link>
               <div className="dash-mobile-card__main min-w-0 flex-grow-1">
                 <Link href={`/posts/${post.id}`} className="dash-link dash-mobile-card__title">

@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { Check, RefreshCw, X, ImageIcon } from "lucide-react";
+import { Check, RefreshCw, X } from "lucide-react";
+import { PostPhoto } from "@/components/posts/post-thumbnail";
 import { PostCandidate } from "@/lib/api";
 import { getPrimaryPostImageUrl } from "@/lib/post-images";
 import { useApp } from "@/providers/app-provider";
@@ -44,15 +44,12 @@ export function PostReviewModal({
         </div>
 
         <div className="dash-modal__body">
-          {thumbUrl ? (
-            <div className="position-relative mb-3 rounded overflow-hidden border" style={{ height: "10rem", borderColor: "var(--bs-border-color) !important", borderWidth: "2px" }}>
-              <Image src={thumbUrl} alt="" fill className="object-cover" unoptimized />
-            </div>
-          ) : (
-            <div className="d-flex align-items-center justify-content-center mb-3 rounded border" style={{ height: "6rem", background: "#eff6ff", borderColor: "var(--bs-border-color)", borderWidth: "2px" }}>
-              <ImageIcon size={32} className="text-muted" />
-            </div>
-          )}
+          <PostPhoto
+            src={thumbUrl}
+            alt=""
+            className="mb-3 border"
+            aspectRatio="16 / 9"
+          />
 
           <div className="dash-form-grid dash-form-grid--2 mb-3 small">
             <div><span className="text-muted">{t.posts.region}: </span>{post.region || "-"}</div>

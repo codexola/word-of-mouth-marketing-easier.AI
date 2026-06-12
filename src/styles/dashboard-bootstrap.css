@@ -621,11 +621,8 @@ html.dark .dash-table tbody tr:hover {
   flex: 0 0 9rem;
   width: 100%;
   height: 9rem;
-  background: var(--muted);
-}
-
-.media-gallery-img {
-  object-fit: cover;
+  overflow: hidden;
+  background: #eff6ff;
 }
 
 .media-gallery-body {
@@ -894,6 +891,9 @@ html.dark .dash-modal__footer {
 }
 
 .dash-thumb {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
   width: 3rem;
   height: 3rem;
   border: 2px solid var(--bs-border-color);
@@ -901,6 +901,51 @@ html.dark .dash-modal__footer {
   overflow: hidden;
   background: #eff6ff;
   box-shadow: 0 2px 0 #dbeafe;
+}
+
+.dash-thumb__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.dash-thumb--empty {
+  background: #eff6ff;
+}
+
+.dash-photo {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--bs-border-radius);
+  background: #eff6ff;
+}
+
+.dash-photo--fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.dash-photo__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.dash-photo--empty {
+  min-height: 6rem;
+  background: #eff6ff;
+}
+
+.media-gallery-img-wrap {
+  border-radius: 0;
 }
 
 /* Mobile card list (replaces wide tables on small screens) */

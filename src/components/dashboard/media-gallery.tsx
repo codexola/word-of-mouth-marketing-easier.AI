@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import { Trash2 } from "lucide-react";
+import { PostPhoto } from "@/components/posts/post-thumbnail";
 import { api, MediaPhoto, SOURCE_LABELS } from "@/lib/api";
 import { useApp } from "@/providers/app-provider";
 import { PageCard } from "@/components/layout/page-shell";
@@ -104,13 +104,11 @@ export function MediaGallery() {
             return (
               <article key={photo.id} className="media-gallery-card">
                 <div className="media-gallery-thumb">
-                  <Image
+                  <PostPhoto
                     src={photo.url}
                     alt={displayFileName(photo)}
                     fill
-                    unoptimized
-                    className="media-gallery-img"
-                    sizes="180px"
+                    className="media-gallery-img-wrap"
                   />
                 </div>
                 <div className="media-gallery-body">
