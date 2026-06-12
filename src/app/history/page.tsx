@@ -11,7 +11,7 @@ import { FlowPageAssets } from "@/components/dashboard/flow-page-assets";
 import { FLOW_IMAGES, PAGE_FLOW_STEPS } from "@/lib/flow-images";
 import { StatusBadge } from "@/components/posts/status-badge";
 import { Pagination } from "@/components/ui/pagination";
-import { api, ApprovedPost, PostStatus } from "@/lib/api";
+import { api, ApprovedPost, PostStatus, ApiError } from "@/lib/api";
 import { formatDate, truncate } from "@/lib/utils";
 import { useApp } from "@/providers/app-provider";
 
@@ -177,8 +177,8 @@ function HistoryContent() {
                                     await api.publishToGbp(post.id);
                                     alert(t.history.publishGbpDone);
                                     loadPosts();
-                                  } catch {
-                                    alert(t.history.publishGbpFailed);
+                                  } catch (err) {
+                                    alert(err instanceof ApiError ? err.message : t.history.publishGbpFailed);
                                   }
                                 }}
                               >

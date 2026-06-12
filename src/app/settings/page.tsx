@@ -170,6 +170,13 @@ function SettingsContent() {
                     {gbpStatus.locationName && ` — ${gbpStatus.locationName}`}
                   </p>
                 )}
+                {gbpStatus?.issues && gbpStatus.issues.length > 0 && (
+                  <ul className="small text-danger mb-0 ps-3">
+                    {gbpStatus.issues.map((issue) => (
+                      <li key={issue}>{issue}</li>
+                    ))}
+                  </ul>
+                )}
                 <div className="d-flex flex-wrap gap-2">
                   <button
                     type="button"

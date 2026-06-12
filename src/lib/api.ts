@@ -198,6 +198,8 @@ export const api = {
       oauthConfigured: boolean;
       connected: boolean;
       autoPostEnabled: boolean;
+      readyToPublish?: boolean;
+      issues?: string[];
       accountId?: string | null;
       locationId?: string | null;
       locationName?: string | null;
