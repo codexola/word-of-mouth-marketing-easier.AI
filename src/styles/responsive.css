@@ -1,0 +1,59 @@
+/* Global responsive safeguards — very small phones (240px+) through desktop */
+
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+  min-width: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
+.app-root {
+  overflow-x: hidden;
+  max-width: 100vw;
+  min-width: 0;
+}
+
+/* Contain wide tables/charts inside dashboard pages */
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll > table {
+  min-width: 36rem;
+}
+
+/* Page content never wider than viewport */
+.page-content {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* Modals on watch-sized screens */
+@media (max-width: 360px) {
+  .modal-sheet {
+    max-height: 100dvh;
+    width: calc(100% - 0.5rem);
+    margin: 0.25rem;
+  }
+}
