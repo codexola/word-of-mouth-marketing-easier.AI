@@ -7,6 +7,7 @@ import { X } from "lucide-react";
 import { Noto_Sans_JP } from "next/font/google";
 import { api, ApiError } from "@/lib/api";
 import { useApp } from "@/providers/app-provider";
+import { LoginSeagullButton } from "@/components/login/login-seagull-button";
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -84,51 +85,31 @@ export default function LoginPage() {
 
   return (
     <div className={`login-page ${notoSansJp.className}`}>
+      <LoginSeagullButton label={t.auth.login} onClick={openLogin} />
+
       <main className="login-landing">
         <section className="login-hero login-hero--desktop" aria-label={t.login.productName}>
-          <div
-            className="login-hero__frame"
-            style={{ aspectRatio: `${DESKTOP_HERO.width} / ${DESKTOP_HERO.height}` }}
-          >
-            <Image
-              src={DESKTOP_HERO.src}
-              alt=""
-              width={DESKTOP_HERO.width}
-              height={DESKTOP_HERO.height}
-              className="login-hero__img"
-              priority
-              unoptimized
-            />
-            <button
-              type="button"
-              className="login-hero__trigger"
-              aria-label={t.auth.login}
-              onClick={openLogin}
-            />
-          </div>
+          <Image
+            src={DESKTOP_HERO.src}
+            alt=""
+            fill
+            className="login-hero__img"
+            priority
+            unoptimized
+            sizes="100vw"
+          />
         </section>
 
         <section className="login-hero login-hero--mobile" aria-label={t.login.productName}>
-          <div
-            className="login-hero__frame"
-            style={{ aspectRatio: `${MOBILE_HERO.width} / ${MOBILE_HERO.height}` }}
-          >
-            <Image
-              src={MOBILE_HERO.src}
-              alt=""
-              width={MOBILE_HERO.width}
-              height={MOBILE_HERO.height}
-              className="login-hero__img"
-              priority
-              unoptimized
-            />
-            <button
-              type="button"
-              className="login-hero__trigger login-hero__trigger--mobile"
-              aria-label={t.auth.login}
-              onClick={openLogin}
-            />
-          </div>
+          <Image
+            src={MOBILE_HERO.src}
+            alt=""
+            fill
+            className="login-hero__img"
+            priority
+            unoptimized
+            sizes="100vw"
+          />
         </section>
       </main>
 
