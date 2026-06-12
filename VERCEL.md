@@ -20,8 +20,8 @@ Vercel Dashboard → **Settings → Environment Variables** に以下を設定:
 | 変数名 | 例 | 説明 |
 |--------|-----|------|
 | `BACKEND_URL` | `http://103.179.45.111:4000` | バックエンド URL（**Server のみ**・Rewrite 用） |
-| `NEXT_PUBLIC_API_URL` | `/api` | ブラウザからは Vercel 経由で API にプロキシ |
-| `NEXT_PUBLIC_FRONTEND_URL` | `https://your-app.vercel.app` | OAuth 戻り先など |
+| `NEXT_PUBLIC_API_URL` | `/api` | **必ず `/api`**（`http://` の URL は不可） |
+| `NEXT_PUBLIC_FRONTEND_URL` | `https://word-of-mouth-marketing-easier-ai.vercel.app` | OAuth 戻り先など |
 | `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | （Maps API キー） | 地図表示用 |
 
 テンプレート: `frontend/.env.production.example`
