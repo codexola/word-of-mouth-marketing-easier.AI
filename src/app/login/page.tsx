@@ -69,15 +69,6 @@ export default function LoginPage() {
 
   return (
     <div className={`login-page ${notoSansJp.className}`}>
-      <Image
-        src="/login-page-bg.png"
-        alt=""
-        fill
-        className="login-page__bg"
-        priority
-        unoptimized
-        sizes="100vw"
-      />
       <div className="login-page__overlay" aria-hidden />
 
       <div className="login-page__shell">
