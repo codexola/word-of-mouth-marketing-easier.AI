@@ -90,6 +90,7 @@ export const translations = {
       privacy: "プライバシーポリシー",
       termsText: "利用規約の全文は準備中です。",
       privacyText: "プライバシーポリシーの全文は準備中です。",
+      closeModal: "閉じる",
       workflowSteps: ["写真・メモを送信", "AIが投稿文を生成", "確認・編集・承認", "Googleに投稿"],
       features: [
         { title: "投稿管理を効率化", desc: "複数店舗の投稿を一元管理し、作業時間を大幅に削減。" },
@@ -562,6 +563,7 @@ export const translations = {
       privacy: "Privacy Policy",
       termsText: "Full terms of service are coming soon.",
       privacyText: "Full privacy policy is coming soon.",
+      closeModal: "Close",
       workflowSteps: ["Send photos/memos", "AI generates text", "Review & approve", "Post to Google"],
       features: [
         { title: "Streamline Management", desc: "Centrally manage posts and reduce work time." },
