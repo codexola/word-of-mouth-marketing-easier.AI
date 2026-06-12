@@ -32,10 +32,28 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!showLogin) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyPosition = body.style.position;
+    const prevBodyTop = body.style.top;
+    const prevBodyWidth = body.style.width;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.width = "100%";
+
     return () => {
-      document.body.style.overflow = prev;
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      body.style.position = prevBodyPosition;
+      body.style.top = prevBodyTop;
+      body.style.width = prevBodyWidth;
+      window.scrollTo(0, scrollY);
     };
   }, [showLogin]);
 
@@ -84,7 +102,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`login-page ${notoSansJp.className}`}>
+    <div className={`login-page ${showLogin ? "login-page--modal-open" : ""} ${notoSansJp.className}`}>
       <LoginSeagullButton label={t.auth.login} onClick={openLogin} />
 
       <main className="login-landing">
@@ -92,8 +110,9 @@ export default function LoginPage() {
           <Image
             src={DESKTOP_HERO.src}
             alt=""
-            fill
-            className="login-hero__img"
+            width={DESKTOP_HERO.width}
+            height={DESKTOP_HERO.height}
+            className="login-hero__img login-hero__img--desktop-fit"
             priority
             unoptimized
             sizes="100vw"
